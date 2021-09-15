@@ -1,4 +1,5 @@
 from Environment import Environment
+from BacktrackingSolver import BacktrackingSolver
 
 
 class Sensor:
@@ -40,6 +41,6 @@ class Agent:
 class Main:
     agent = Agent()
     agent.initializeEnvironment("Easy", 1)
-    print(agent.isSolved())
+    solver = BacktrackingSolver(Solver(agent, agent.sensor, agent.actuator))
 
 Main()
