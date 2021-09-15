@@ -1,2 +1,11 @@
+import Agent
+
+
 class Solver:
-    pass
+
+    def __init__(self, sensor: Agent.Sensor, actuator: Agent.Actuator ):
+        self.sensor = sensor
+        self.actuator = actuator
+
+    def solve(self):
+        pass

@@ -1,11 +1,14 @@
 class Environment:
 
-    def __init__(self):
-        self.__board = []  # Initialize board
+    def __init__(self, difficulty: str, boardNumber: int):
+        self.__board = self.loadBoard(difficulty, boardNumber)  # Initialize board
+
     #   :param difficulty: String of difficulty of the board to load
     #   :param boardNumber: Int of the number of the board to load
     #   Reads in and loads the board
-    def loadBoard(self, difficulty: str, boardNumber: int):
+    @staticmethod
+    def loadBoard(difficulty: str, boardNumber: int):
+        board = []
         try:
             file = open("Puzzles/" + str(difficulty) + "-P" + str(boardNumber) + '.csv', "r")
         except FileNotFoundError:
@@ -13,9 +16,9 @@ class Environment:
             file = open("Puzzles/Easy-P1.csv", "r")
         #   Read file in line by line
         for line in file:
-            self.__board.append(
-                [int(numbers) for numbers in line.strip("\n").strip("\ufeff0").replace("?", "0").split(",")])
+            board.append([int(numbers) for numbers in line.strip("\n").strip("\ufeff0").replace("?", "0").split(",")])
         file.close()
+        return board
 
     #   Getter for the board
     def getBoard(self):
