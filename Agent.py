@@ -22,7 +22,7 @@ class Agent:
         self.currentEnvironment = Environment(difficultly, boardNumber)
 
     def solveWithBacktracking(self):
-        return BacktrackingSolver(self.currentEnvironment.getBoard()).solve()
+        return BacktrackingSolver().solve(self.currentEnvironment.getBoard())
 
 
 if __name__ == "__main__":
