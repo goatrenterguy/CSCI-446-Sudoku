@@ -1,5 +1,6 @@
 from Environment import Environment
 from BacktrackingSolver import BacktrackingSolver
+from LocalSeachSolver import SimulatedAnnealing
 
 
 class Agent:
@@ -24,6 +25,9 @@ class Agent:
     def solveWithBacktracking(self):
         return BacktrackingSolver().solve(self.currentEnvironment.getBoard())
 
+    def solveSimulatedAnnealing(self):
+        return SimulatedAnnealing().solve(self.currentEnvironment.getBoard())
+
 
 if __name__ == "__main__":
     print("Enter desired board difficulty [\"Easy\", \"Med\",\"Hard\",\"Evil\"]:")
@@ -33,3 +37,4 @@ if __name__ == "__main__":
     a = Agent()
     a.initializeEnvironment(difficulty, boardNumber)
     print(a.solveWithBacktracking())
+    a.solveSimulatedAnnealing()

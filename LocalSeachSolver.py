@@ -1,11 +1,50 @@
-import Agent
-import Solver
+import math
+from random import choice
 
 
-class LocalSearchSolver(Solver):
+class SimulatedAnnealing:
+    def __init__(self):
+        self.solved = False
 
     def solve(self, board):
-        pass
+        board = self.generateRandomNumInBlocks(board)
+        print(board)
+        print(self.costFunction(board))
 
-    def generateCanidate(self):
+    def generateRandomNumInBlocks(self, board):
+        for y in range(8):
+            for x in range(8):
+                if board[y][x] == 0:
+                    board[y][x] = choice([i for i in range(1, 10) if i not in self.getNumbersInBlock(y, x, board)])
+        return board
+
+    def getNumbersInBlock(self, row, col, board):
+        blocks = [[] for _ in range(9)]
+        for y in range(8):
+            for x in range(8):
+                blocks[((y // 3) * 3) + (x // 3)].append(board[y][x])
+        block = blocks[((row // 3) * 3) + (col // 3)]
+        return block
+
+    def costFunction(self, board):
+        cost = 0
+        # count duplicates in the row
+        for y in board:
+            for x in y:
+                for z in range(8):
+                    if x == z:
+                        cost += 1
+        # Transpose board
+        tBoard = [list(x) for x in list(zip(board))]
+        # Count duplicates in columns
+        for y in tBoard:
+            for x in y:
+                for z in range(8):
+                    if x == z:
+                        cost += 1
+        return cost
+
+
+
+    def schedule(self, board):
         pass

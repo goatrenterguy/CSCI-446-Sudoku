@@ -1,6 +1,4 @@
 class BacktrackingSolver:
-    def __init__(self):
-        self.solved = False
 
     def solve(self, board, logicSteps=0):
         logicSteps += 1
@@ -15,10 +13,13 @@ class BacktrackingSolver:
 
                             print("steps: " + str(logicSteps), " board is solved= ", self.isSolved(board))
                             self.printBoard(board)
+                            if self.isSolved(board):
+                                # Need to figure something out here
+                                pass
                             self.solve(board, logicSteps)
                             board[y][x] = 0
-                    return board, logicSteps
-        return board, logicSteps
+                    return logicSteps
+        return logicSteps
         # input("Here is the first solution. Continue to look for more?")
 
     @staticmethod
