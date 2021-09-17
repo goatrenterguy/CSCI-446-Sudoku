@@ -22,9 +22,7 @@ class BacktrackingSolver:
                             self.solve(board, logicSteps)
                             if not self.isSolved(board):
                                 board[y][x] = 0
-                return self.logicSteps, self.solvedBoard
-        #input("Here is the first solution. Continue to look for more?")
-        #quit()
+                    return self.logicSteps, self.solvedBoard
 
     def possible(self, board, y, x, n):
         # check row
