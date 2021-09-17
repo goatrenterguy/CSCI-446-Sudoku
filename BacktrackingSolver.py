@@ -10,8 +10,7 @@ class BacktrackingSolver:
             for x in range(9):
                 if board[y][x] == 0:
                     for testInput in range(1, 10):
-                        print(
-                            "Testing value: " + str(testInput) + " at coordinates (" + str(y) + "," + str(x) + ")")
+                        #print("Testing value: " + str(testInput) + " at coordinates (" + str(y) + "," + str(x) + ")")
                         if self.possible(board, y, x, testInput):
                             board[y][x] = testInput
                             # print(logicSteps)
@@ -21,10 +20,11 @@ class BacktrackingSolver:
                                 self.logicSteps = logicSteps
                                 self.solvedBoard = board
                             self.solve(board, logicSteps)
-                            board[y][x] = 0
-                    return logicSteps
-        return logicSteps
-        # input("Here is the first solution. Continue to look for more?")
+                            if not self.isSolved(board):
+                                board[y][x] = 0
+                return self.logicSteps, self.solvedBoard
+        #input("Here is the first solution. Continue to look for more?")
+        #quit()
 
     def possible(self, board, y, x, n):
         # check row

@@ -1,3 +1,4 @@
+import copy
 import math
 import random
 from random import choice
@@ -9,20 +10,22 @@ class SimulatedAnnealing:
         self.initialBoard = None
 
     def solve(self, board):
-        self.initialBoard = board
+        self.initialBoard = copy.deepcopy(board)
         board = self.generateRandomNumInBlocks(board)
         updates = 1
-        T = self.annealingSchedule(1, .9, updates)
-        while T > 0.01:
-            print("Temp: " + str(T))
-            nextBoard = self.nextState(board)
-            costDelta = self.costFunction(nextBoard) - self.costFunction(board)
+        T = self.annealingSchedule(2000, .9, updates)
+        while T >= 0.01:
+            nextBoard = self.nextState(copy.deepcopy(board))
+            costDelta = self.costFunction(board) - self.costFunction(nextBoard)
             if costDelta > 0:
                 board = nextBoard
-            elif random.random() < pow(math.e, costDelta / 0.0000000000000000000000138 * T):
+                if self.costFunction(board) == 0:
+                    return board, self.costFunction(board)
+            elif random.random() < pow(math.e, costDelta / (10 * T)):
                 board = nextBoard
+            # print("Cost Delta: " + str(costDelta) + "Probability: " + str(pow(math.e, costDelta / (10 * T))) + "Temp: " + str("Temp: " + str(T)))
             updates += 1
-            T = self.annealingSchedule(200, .9, updates)
+            T = self.annealingSchedule(2000, .9, updates)
         return board, self.costFunction(board)
 
     #   Swap two of the cells in each box
@@ -32,7 +35,7 @@ class SimulatedAnnealing:
         for row in range(0, 9, 3):
             for col in range(0, 9, 3):
                 initialBlock = self.getNumbersInBlock(row, col, self.initialBoard)
-                while one == two and board[initialBlock[one][0]][initialBlock[one][1]] != 0 and board[initialBlock[two][0]][initialBlock[two][1]] != 0:
+                while one == two or self.initialBoard[initialBlock[one][0]][initialBlock[one][1]] != 0 or self.initialBoard[initialBlock[two][0]][initialBlock[two][1]] != 0:
                     one = choice(range(9))
                     two = choice(range(9))
                 # Swap swap
