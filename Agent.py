@@ -23,7 +23,7 @@ class Agent:
         self.currentEnvironment = Environment(difficultly, boardNumber)
 
     def solveWithBacktracking(self):
-        return BacktrackingSolver().solve(self.currentEnvironment.getBoard())
+        return BacktrackingSolver().solve(self.currentEnvironment.getBoard(), 0)
 
     def solveSimulatedAnnealing(self):
         return SimulatedAnnealing().solve(self.currentEnvironment.getBoard())

@@ -1,5 +1,9 @@
 class BacktrackingSolver:
 
+    def __init__(self):
+        self.logicSteps = None
+        self.solvedBoard = None
+
     def solve(self, board, logicSteps=0):
         logicSteps += 1
         for y in range(9):
@@ -10,20 +14,19 @@ class BacktrackingSolver:
                             "Testing value: " + str(testInput) + " at coordinates (" + str(y) + "," + str(x) + ")")
                         if self.possible(board, y, x, testInput):
                             board[y][x] = testInput
-
-                            print("steps: " + str(logicSteps), " board is solved= ", self.isSolved(board))
-                            self.printBoard(board)
+                            # print(logicSteps)
+                            # print("steps: " + str(logicSteps), " board is solved= ", self.isSolved(board))
+                            # self.printBoard(board)
                             if self.isSolved(board):
-                                # Need to figure something out here
-                                pass
+                                self.logicSteps = logicSteps
+                                self.solvedBoard = board
                             self.solve(board, logicSteps)
                             board[y][x] = 0
                     return logicSteps
         return logicSteps
         # input("Here is the first solution. Continue to look for more?")
 
-    @staticmethod
-    def possible(board, y, x, n):
+    def possible(self, board, y, x, n):
         # check row
         for k in range(9):
             if board[y][k] == n:
@@ -43,15 +46,13 @@ class BacktrackingSolver:
                     return False
         return True
 
-    @staticmethod
-    def isSolved(board):
+    def isSolved(self, board):
         for y in board:
             for x in y:
                 if x == 0:
                     return False
         return True
 
-    @staticmethod
-    def printBoard(board):
+    def printBoard(self, board):
         for y in board:
             print(y)
