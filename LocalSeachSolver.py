@@ -15,7 +15,12 @@ class SimulatedAnnealing:
         updates = 0
         while self.annealingSchedule(200, .9, updates) != 0:
             nextBoard = next(board)
-    #         Randomly move the variables inside their blocks
+            updates += 1
+            costDelta = self.costFunction(nextBoard) - self.costFunction(board)
+            if costDelta > 0:
+                board = nextBoard
+            elif(0):
+                pass
     #           calculate the change in cost with costFunciton()
     #               if the change in cost is greater then 0
     #                     current board becomes neighbor board
