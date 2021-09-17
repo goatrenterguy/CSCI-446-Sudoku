@@ -25,8 +25,8 @@ class Agent:
     def solveWithBacktracking(self):
         return BacktrackingSolver().solve(self.currentEnvironment.getBoard(), 0)
 
-    def solveSimulatedAnnealing(self):
-        return SimulatedAnnealing().solve(self.currentEnvironment.getBoard())
+    def solveSimulatedAnnealing(self, temp):
+        return SimulatedAnnealing().solve(self.currentEnvironment.getBoard(), temp)
 
 
 if __name__ == "__main__":
@@ -37,4 +37,10 @@ if __name__ == "__main__":
     a = Agent()
     a.initializeEnvironment(difficulty, boardNumber)
     # print(a.solveWithBacktracking())
-    print(a.solveSimulatedAnnealing())
+    sum = 0
+    run = 100
+    for step in range(2000, 20000, 1000):
+        for i in range(run):
+            sum += a.solveSimulatedAnnealing(step)[2]
+        print("Initial Temp: " + str(step) + "Average: " + str(sum/run))
+        sum = 0

@@ -9,24 +9,24 @@ class SimulatedAnnealing:
         self.solved = False
         self.initialBoard = None
 
-    def solve(self, board):
+    def solve(self, board, temp):
         self.initialBoard = copy.deepcopy(board)
         board = self.generateRandomNumInBlocks(board)
         updates = 1
-        T = self.annealingSchedule(2000, .9, updates)
-        while T >= 0.01:
+        T = temp/updates
+        while T > 0.01:
             nextBoard = self.nextState(copy.deepcopy(board))
             costDelta = self.costFunction(board) - self.costFunction(nextBoard)
             if costDelta > 0:
                 board = nextBoard
                 if self.costFunction(board) == 0:
-                    return board, self.costFunction(board)
-            elif random.random() < pow(math.e, costDelta / (10 * T)):
+                    return board, self.costFunction(board), updates
+            elif random.random() < math.exp(costDelta / T):
                 board = nextBoard
-            # print("Cost Delta: " + str(costDelta) + "Probability: " + str(pow(math.e, costDelta / (10 * T))) + "Temp: " + str("Temp: " + str(T)))
+            # print("Cost Delta: " + str(costDelta) + " Probability: " + str(math.exp(costDelta / T)) + " Temp: " + str("Temp: " + str(T)))
             updates += 1
-            T = self.annealingSchedule(2000, .9, updates)
-        return board, self.costFunction(board)
+            T = temp/updates
+        return board, self.costFunction(board), updates
 
     #   Swap two of the cells in each box
     def nextState(self, board):

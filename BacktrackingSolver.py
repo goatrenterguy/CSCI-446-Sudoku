@@ -1,4 +1,4 @@
-class BacktrackingSolver:
+class SimpleBacktrackingSolver:
 
     def __init__(self):
         self.logicSteps = None
