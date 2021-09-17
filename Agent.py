@@ -36,5 +36,5 @@ if __name__ == "__main__":
     boardNumber = input()
     a = Agent()
     a.initializeEnvironment(difficulty, boardNumber)
-    print(a.solveWithBacktracking())
+    # print(a.solveWithBacktracking())
     a.solveSimulatedAnnealing()
