@@ -1,4 +1,5 @@
 import math
+import random
 from random import choice
 
 
@@ -10,22 +11,19 @@ class SimulatedAnnealing:
     def solve(self, board):
         self.initialBoard = board
         board = self.generateRandomNumInBlocks(board)
-        print(board)
-        print(self.costFunction(board))
-        updates = 0
-        while self.annealingSchedule(200, .9, updates) != 0:
-            nextBoard = next(board)
-            updates += 1
+        updates = 1
+        T = self.annealingSchedule(1, .9, updates)
+        while T > 0.01:
+            print("Temp: " + str(T))
+            nextBoard = self.nextState(board)
             costDelta = self.costFunction(nextBoard) - self.costFunction(board)
             if costDelta > 0:
                 board = nextBoard
-            elif(0):
-                pass
-    #           calculate the change in cost with costFunciton()
-    #               if the change in cost is greater then 0
-    #                     current board becomes neighbor board
-    #               else
-    #                      if probabilty keep anyway
+            elif random.random() < pow(math.e, costDelta / 0.0000000000000000000000138 * T):
+                board = nextBoard
+            updates += 1
+            T = self.annealingSchedule(200, .9, updates)
+        return board, self.costFunction(board)
 
     #   Swap two of the cells in each box
     def nextState(self, board):
@@ -81,7 +79,6 @@ class SimulatedAnnealing:
                         cost += 1
         return cost
 
-
-
-    def schedule(self, board):
-        pass
+    def printBoard(self, board):
+        for y in board:
+            print(y)
