@@ -6,15 +6,14 @@ from random import choice
 
 class SimulatedAnnealing:
     def __init__(self):
-        self.solved = False
         self.initialBoard = None
 
-    def solve(self, board, temp):
+    def solve(self, board, temp, beta):
         self.initialBoard = copy.deepcopy(board)
         board = self.generateRandomNumInBlocks(board)
         updates = 1
-        T = temp/updates
-        while T > 0.01:
+        T = self.annealingSchedule(temp, beta, updates)
+        while T > .01:
             nextBoard = self.nextState(copy.deepcopy(board))
             costDelta = self.costFunction(board) - self.costFunction(nextBoard)
             if costDelta > 0:
@@ -23,9 +22,9 @@ class SimulatedAnnealing:
                     return board, self.costFunction(board), updates
             elif random.random() < math.exp(costDelta / T):
                 board = nextBoard
-            # print("Cost Delta: " + str(costDelta) + " Probability: " + str(math.exp(costDelta / T)) + " Temp: " + str("Temp: " + str(T)))
+            print("Cost Delta: " + str(costDelta) + " Probability: " + str(math.exp(costDelta / T)) + " Temp: " + str("Temp: " + str(T)))
             updates += 1
-            T = temp/updates
+            T = self.annealingSchedule(temp, beta, updates)
         return board, self.costFunction(board), updates
 
     #   Swap two of the cells in each box

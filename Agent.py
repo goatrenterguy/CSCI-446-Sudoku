@@ -1,5 +1,5 @@
 from Environment import Environment
-from BacktrackingSolver import BacktrackingSolver
+from BacktrackingSolver import SimpleBacktrackingSolver
 from LocalSeachSolver import SimulatedAnnealing
 
 
@@ -22,11 +22,11 @@ class Agent:
     def initializeEnvironment(self, difficultly, boardNumber):
         self.currentEnvironment = Environment(difficultly, boardNumber)
 
-    def solveWithBacktracking(self):
-        return BacktrackingSolver().solve(self.currentEnvironment.getBoard(), 0)
+    def solveWithSimpleBacktracking(self):
+        return SimpleBacktrackingSolver().solve(self.currentEnvironment.getBoard(), 0)
 
-    def solveSimulatedAnnealing(self, temp):
-        return SimulatedAnnealing().solve(self.currentEnvironment.getBoard(), temp)
+    def solveSimulatedAnnealing(self, temp, beta):
+        return SimulatedAnnealing().solve(self.currentEnvironment.getBoard(), temp, beta)
 
 
 if __name__ == "__main__":
@@ -36,11 +36,6 @@ if __name__ == "__main__":
     boardNumber = input()
     a = Agent()
     a.initializeEnvironment(difficulty, boardNumber)
-    # print(a.solveWithBacktracking())
-    sum = 0
-    run = 100
-    for step in range(2000, 20000, 1000):
-        for i in range(run):
-            sum += a.solveSimulatedAnnealing(step)[2]
-        print("Initial Temp: " + str(step) + "Average: " + str(sum/run))
-        sum = 0
+    # print(a.solveWithSimpleBacktracking())
+    print(a.solveSimulatedAnnealing(2000, 5))
+
