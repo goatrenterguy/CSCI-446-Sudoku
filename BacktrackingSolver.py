@@ -48,10 +48,6 @@ def getPossibleValues(board):
 
 class ForwardCheckingBacktrackingSolver:
 
-    def __init__(self):
-        self.logicSteps = None
-        self.solvedBoard = None
-
     def solve(self, board, logicSteps=0):
         possibleValues = getPossibleValues(board)
         logicSteps += 1
@@ -61,9 +57,6 @@ class ForwardCheckingBacktrackingSolver:
                     try:
                         testInput = choice(possibleValues[y][x])
                         board[y][x] = testInput
-                        if isSolved(board):
-                            self.logicSteps = logicSteps
-                            self.solvedBoard = board
                         logicSteps += self.solve(board, logicSteps)[0]
                     except IndexError:
                         return logicSteps, board
@@ -71,10 +64,6 @@ class ForwardCheckingBacktrackingSolver:
 
 
 class SimpleBacktrackingSolver:
-
-    def __init__(self):
-        self.logicSteps = None
-        self.solvedBoard = None
 
     def solve(self, board, logicSteps=0):
         if not isSolved(board):
