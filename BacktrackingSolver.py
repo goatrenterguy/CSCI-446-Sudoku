@@ -37,30 +37,47 @@ def possible(board, y, x, n):
 
 def getPossibleValues(board):
     possibleValues = [[[] for _ in range(9)] for _ in range(9)]
+    stillPossible = True
     for y in range(9):
         for x in range(9):
             if board[y][x] == 0:
                 for v in range(1, 10):
                     if possible(board, y, x, v):
                         possibleValues[y][x].append(v)
-    return possibleValues
+                if len(possibleValues[y][x]) == 0:
+                    stillPossible = False
+            else:
+                possibleValues[y][x].append(-1)
+    return possibleValues, stillPossible
 
 
 class ForwardCheckingBacktrackingSolver:
 
     def solve(self, board, logicSteps=0):
-        possibleValues = getPossibleValues(board)
-        logicSteps += 1
-        for y in range(9):
-            for x in range(9):
-                if board[y][x] == 0:
-                    try:
-                        testInput = choice(possibleValues[y][x])
-                        board[y][x] = testInput
-                        logicSteps += self.solve(board, logicSteps)[0]
-                    except IndexError:
-                        return logicSteps, board
-        return logicSteps, board
+        allPossible = getPossibleValues(board)
+        possibleValues = allPossible[0]
+        solvable = allPossible[1]
+        if solvable:
+            logicSteps += 1
+            for y in range(9):
+                for x in range(9):
+                    if board[y][x] == 0:
+                        try:
+                            while True:
+                                testInput = choice(possibleValues[y][x])
+                                board[y][x] = testInput
+                                nextState = self.solve(board)
+                                logicSteps += nextState[0]
+                                if not nextState[2]:
+                                    board[y][x] = 0
+                                    possibleValues[y][x].remove(testInput)
+                                    if len(possibleValues[y][x]) == 0:
+                                        return logicSteps, board, False
+                                else:
+                                    break
+                        except IndexError:
+                            return logicSteps, board, False
+        return logicSteps, board, solvable
 
 
 class SimpleBacktrackingSolver:
@@ -74,7 +91,7 @@ class SimpleBacktrackingSolver:
                         for testInput in range(1, 10):
                             if possible(board, y, x, testInput):
                                 board[y][x] = testInput
-                                logicSteps += self.solve(board, logicSteps)[0]
+                                logicSteps += self.solve(board)[0]
                                 if not isSolved(board):
                                     board[y][x] = 0
                         return logicSteps, board

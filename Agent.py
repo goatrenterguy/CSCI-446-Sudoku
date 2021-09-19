@@ -40,6 +40,7 @@ class Agent:
 
 
 if __name__ == "__main__":
+    difficulties = ["Easy", "Med", "Hard", "Evil"]
     print("Enter desired board difficulty [\"Easy\", \"Med\",\"Hard\",\"Evil\"]:")
     difficulty = input()
     print("Enter board number [1-5]:")
@@ -49,7 +50,8 @@ if __name__ == "__main__":
     bt = a.solveWithSimpleBacktracking()
     print("SolveBacktracking Steps: " + str(bt[0]))
     printBoard(bt[1])
-    # print(a.solveSimulatedAnnealing(2000, 5))
+
     fc = a.solveWithForwardCheckingBacktracking()
     print("SolveWithForwardChecking Steps: " + str(fc[0]))
     printBoard(fc[1])
+    # print(a.solveSimulatedAnnealing(2000, 5))
