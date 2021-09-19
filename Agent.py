@@ -1,6 +1,13 @@
+import copy
+
 from Environment import Environment
-from BacktrackingSolver import SimpleBacktrackingSolver
+from BacktrackingSolver import SimpleBacktrackingSolver, ForwardCheckingBacktrackingSolver
 from LocalSeachSolver import SimulatedAnnealing
+
+
+def printBoard(board):
+    for y in board:
+        print(y)
 
 
 class Agent:
@@ -23,10 +30,13 @@ class Agent:
         self.currentEnvironment = Environment(difficultly, boardNumber)
 
     def solveWithSimpleBacktracking(self):
-        return SimpleBacktrackingSolver().solve(self.currentEnvironment.getBoard(), 0)
+        return SimpleBacktrackingSolver().solve(copy.deepcopy(self.currentEnvironment.getBoard()))
+
+    def solveWithForwardCheckingBacktracking(self):
+        return ForwardCheckingBacktrackingSolver().solve(copy.deepcopy(self.currentEnvironment.getBoard()))
 
     def solveSimulatedAnnealing(self, temp, beta):
-        return SimulatedAnnealing().solve(self.currentEnvironment.getBoard(), temp, beta)
+        return SimulatedAnnealing().solve(copy.deepcopy(self.currentEnvironment.getBoard(), temp, beta))
 
 
 if __name__ == "__main__":
@@ -36,6 +46,10 @@ if __name__ == "__main__":
     boardNumber = input()
     a = Agent()
     a.initializeEnvironment(difficulty, boardNumber)
-    # print(a.solveWithSimpleBacktracking())
-    print(a.solveSimulatedAnnealing(2000, 5))
-
+    bt = a.solveWithSimpleBacktracking()
+    print("SolveBacktracking Steps: " + str(bt[0]))
+    printBoard(bt[1])
+    # print(a.solveSimulatedAnnealing(2000, 5))
+    fc = a.solveWithForwardCheckingBacktracking()
+    print("SolveWithForwardChecking Steps: " + str(fc[0]))
+    printBoard(fc[1])
