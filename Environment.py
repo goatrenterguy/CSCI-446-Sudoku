@@ -10,10 +10,10 @@ class Environment:
     def loadBoard(difficulty: str, boardNumber: int):
         board = []
         try:
-            file = open("Puzzles/" + str(difficulty) + "-P" + str(boardNumber) + '.csv', "r")
+            file = open("Puzzles/" + str(difficulty) + "-P" + str(boardNumber) + '.csv', "r", encoding="utf-8-sig")
         except FileNotFoundError:
             print("File failed to load, check input. Loading default board...")
-            file = open("Puzzles/Easy-P1.csv", "r")
+            file = open("Puzzles/Easy-P1.csv", "r", encoding="utf-8-sig")
         #   Read file in line by line
         for line in file:
             board.append([int(numbers) for numbers in line.strip("\n").strip("\ufeff0").replace("?", "0").split(",")])

@@ -2,7 +2,7 @@ import copy
 
 from Environment import Environment
 from BacktrackingSolver import SimpleBacktrackingSolver, ForwardCheckingBacktrackingSolver
-from LocalSeachSolver import SimulatedAnnealing
+from LocalSeachSolver import SimulatedAnnealing, GeneticAlgorithm
 
 
 def printBoard(board):
@@ -38,6 +38,8 @@ class Agent:
     def solveSimulatedAnnealing(self, temp, beta):
         return SimulatedAnnealing().solve(copy.deepcopy(self.currentEnvironment.getBoard(), temp, beta))
 
+    def solveGeneticAlgorithm(self, populationSize):
+        return GeneticAlgorithm().solve(copy.deepcopy(self.currentEnvironment.getBoard()), populationSize)
 
 if __name__ == "__main__":
     print("Enter desired board difficulty [\"Easy\", \"Med\",\"Hard\",\"Evil\"]:")
@@ -46,10 +48,11 @@ if __name__ == "__main__":
     boardNumber = input()
     a = Agent()
     a.initializeEnvironment(difficulty, boardNumber)
-    bt = a.solveWithSimpleBacktracking()
-    print("SolveBacktracking Steps: " + str(bt[0]))
-    printBoard(bt[1])
-    # print(a.solveSimulatedAnnealing(2000, 5))
-    fc = a.solveWithForwardCheckingBacktracking()
-    print("SolveWithForwardChecking Steps: " + str(fc[0]))
-    printBoard(fc[1])
+    #bt = a.solveWithSimpleBacktracking()
+    #print("SolveBacktracking Steps: " + str(bt[0]))
+    #printBoard(bt[1])
+    ## print(a.solveSimulatedAnnealing(2000, 5))
+    #fc = a.solveWithForwardCheckingBacktracking()
+    #print("SolveWithForwardChecking Steps: " + str(fc[0]))
+    #printBoard(fc[1])
+    ga = a.solveGeneticAlgorithm(10)
