@@ -34,6 +34,7 @@ class SimulatedAnnealing:
         for row in range(0, 9, 3):
             for col in range(0, 9, 3):
                 initialBlock = self.getNumbersInBlock(row, col, self.initialBoard)
+                # Check if they are the same or if they are values that is not editible
                 while one == two or self.initialBoard[initialBlock[one][0]][initialBlock[one][1]] != 0 or self.initialBoard[initialBlock[two][0]][initialBlock[two][1]] != 0:
                     one = choice(range(9))
                     two = choice(range(9))
@@ -52,12 +53,15 @@ class SimulatedAnnealing:
                     board[y][x] = choice([i for i in range(1, 10) if i not in numbers])
         return board
 
+    # Calcualtes Temperature
     def annealingSchedule(self, initialTemp, coolingRate, updates):
         return (initialTemp * coolingRate) / (coolingRate + updates)
 
+    # Calculates temperature
     def annealingScheduleTwo(self, initialTemp, coolingRate, updates):
         return initialTemp/(1 + (coolingRate * math.log(1 + updates, 10))) - 1
 
+    # Returns what other numbers are in a cordinates block
     def getNumbersInBlock(self, row, col, board):
         blocks = [[] for _ in range(9)]
         for y in range(9):
@@ -66,6 +70,7 @@ class SimulatedAnnealing:
         block = blocks[((row // 3) * 3) + (col // 3)]
         return block
 
+    # Calucates the cost of the board by adding number of dupliucates in rows and columns
     def costFunction(self, board):
         cost = 0
         # count duplicates in the row
