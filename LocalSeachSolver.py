@@ -8,12 +8,12 @@ class SimulatedAnnealing:
     def __init__(self):
         self.initialBoard = None
 
-    def solve(self, board, temp, beta):
+    def solve(self, board, temp, tau):
         self.initialBoard = copy.deepcopy(board)
         board = self.generateRandomNumInBlocks(board)
         updates = 1
-        T = self.annealingSchedule(temp, beta, updates)
-        while T > .01:
+        T = self.annealingScheduleTwo(temp, tau, updates)
+        while T > .4:
             nextBoard = self.nextState(copy.deepcopy(board))
             costDelta = self.costFunction(board) - self.costFunction(nextBoard)
             if costDelta > 0:
@@ -22,9 +22,9 @@ class SimulatedAnnealing:
                     return board, self.costFunction(board), updates
             elif random.random() < math.exp(costDelta / T):
                 board = nextBoard
-            print("Cost Delta: " + str(costDelta) + " Probability: " + str(math.exp(costDelta / T)) + " Temp: " + str("Temp: " + str(T)))
+            print("Cost Delta: " + str(costDelta) + " Probability: " + str(math.exp(costDelta / T)) + " Temp: " + str(T))
             updates += 1
-            T = self.annealingSchedule(temp, beta, updates)
+            T = self.annealingScheduleTwo(temp, tau, updates)
         return board, self.costFunction(board), updates
 
     #   Swap two of the cells in each box
@@ -54,6 +54,9 @@ class SimulatedAnnealing:
 
     def annealingSchedule(self, initialTemp, coolingRate, updates):
         return (initialTemp * coolingRate) / (coolingRate + updates)
+
+    def annealingScheduleTwo(self, initialTemp, coolingRate, updates):
+        return initialTemp/(1 + (coolingRate * math.log(1 + updates, 10))) - 1
 
     def getNumbersInBlock(self, row, col, board):
         blocks = [[] for _ in range(9)]
