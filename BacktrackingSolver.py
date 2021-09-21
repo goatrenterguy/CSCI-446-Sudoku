@@ -35,6 +35,79 @@ def possible(board, y, x, n):
     return True
 
 
+class BacktrackingAC:
+
+    def __init__(self, board):
+        self.logicSteps = 0
+        self.solvedBoard = None
+        self.cells = []
+        for y in range(9):
+            for x in range(9):
+                if board[y][x] == 0:
+                    self.cells.append(Cell(x, y))
+
+    def solve(self, board):
+        if isSolved(board):
+            return self.logicSteps, board
+        self.logicSteps += 1
+        for cell in self.cells:
+            cell.legalValues(board)
+        minCell = self.cells[0]
+        for cell in self.cells:
+            if len(minCell.values) >= len(cell.values) and cell.value == 0 and len(minCell.values) > 0:
+                if cell.value == 0 and len(cell.values) == 0:
+                    return
+                minCell = cell
+
+        for value in self.cells[self.cells.index(minCell)].values:
+            # print("Testing ", value, " in ", "(", minCell.x, ", ", minCell.y, ") from ", minCell.values)
+            board[minCell.y][minCell.x] = value
+            self.cells[self.cells.index(minCell)].value = value
+            # self.cells[self.cells.index(minCell)].values.remove(value)
+            if isSolved(board):
+                self.solvedBoard = board
+            self.solve(board)
+            if not isSolved(board):
+                board[minCell.y][minCell.x] = 0
+                self.cells[self.cells.index(minCell)].value = 0
+        return self.logicSteps, self.solvedBoard
+
+
+class Cell:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.values = []
+        self.value = 0
+
+    def legalValues(self, board):
+        self.values = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        if self.value != 0:
+            # print("My value is set")
+            self.values.remove(self.value)
+            #    self.values = [self.value]
+            return
+        # else:
+
+        # check row
+        for k in range(9):
+            if board[self.y][k] in self.values:
+                self.values.remove(board[self.y][k])
+
+        # check column
+        for k in range(9):
+            if board[k][self.x] in self.values:
+                self.values.remove(board[k][self.x])
+
+        # check cell
+        cornerX = (self.x // 3) * 3
+        cornerY = (self.y // 3) * 3
+        for i in range(3):
+            for j in range(3):
+                if board[cornerY + i][cornerX + j] in self.values:
+                    self.values.remove(board[cornerY + i][cornerX + j])
+
+
 def getPossibleValues(board):
     """
     Calculates all possible values that can be entered into the each cell

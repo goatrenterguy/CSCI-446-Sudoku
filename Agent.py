@@ -1,7 +1,7 @@
 import copy
 
 from Environment import Environment
-from BacktrackingSolver import SimpleBacktrackingSolver, ForwardCheckingBacktrackingSolver
+from BacktrackingSolver import SimpleBacktrackingSolver, ForwardCheckingBacktrackingSolver, BacktrackingAC
 from LocalSeachSolver import SimulatedAnnealing
 
 
@@ -41,6 +41,11 @@ class Agent:
     def solveSimulatedAnnealing(self, temp, tau):
         return SimulatedAnnealing().solve(copy.deepcopy(self.currentEnvironment.getBoard()), temp, tau)
 
+    #   Method to solve the current environments board with a simulated annealing algorithm
+    def solveArcConsistency(self):
+        board = copy.deepcopy(self.currentEnvironment.getBoard())
+        return BacktrackingAC(board).solve(board)
+
 
 if __name__ == "__main__":
     difficulties = ["Easy", "Med", "Hard", "Evil"]
@@ -49,18 +54,22 @@ if __name__ == "__main__":
     print("Enter board number [1-5]:")
     boardNumber = input()
     a = Agent()
-    runs = 100
+    runs = 1
 
     # Compare backtracking solvers average attempts
-    # for dif in difficulties:
-    #     for nums in range(1, 6):
-    #         a.initializeEnvironment(dif, nums)
-    #         fcAverage = 0
-    #         btAverage = 0
-    #         for run in range(runs):
-    #             fcAverage += a.solveWithForwardCheckingBacktracking()[0]
-    #             btAverage += a.solveWithSimpleBacktracking()[0]
-    #         print("Simple Backtracking Average Steps (Diff: " + dif + ", Num: " + str(nums) + "): " + str(btAverage / runs))
-    #         print("Forward Backtracking Average Steps (Diff: " + dif + ", Num: " + str(nums) + "): " + str(fcAverage / runs))
-    a.initializeEnvironment(difficulty, boardNumber)
-    print(a.solveSimulatedAnnealing(500, 60))
+    for dif in difficulties:
+        for nums in range(1, 6):
+            a.initializeEnvironment(dif, nums)
+            fcAverage = 0
+            btAverage = 0
+            acAverage = 0
+            for run in range(runs):
+                fcAverage += a.solveWithForwardCheckingBacktracking()[0]
+                btAverage += a.solveWithSimpleBacktracking()[0]
+                acAverage += a.solveArcConsistency()[0]
+            print("Simple Backtracking Average Steps (Diff: " + dif + ", Num: " + str(nums) + "): " + str(btAverage / runs))
+            print("Forward Backtracking Average Steps (Diff: " + dif + ", Num: " + str(nums) + "): " + str(fcAverage / runs))
+            print("Arc Backtracking Average Steps (Diff: " + dif + ", Num: " + str(nums) + "): " + str(acAverage / runs))
+            print("+----------------+")
+    # a.initializeEnvironment(difficulty, boardNumber)
+    # print(a.solveSimulatedAnnealing(500, 60))
