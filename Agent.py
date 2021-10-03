@@ -1,46 +1,75 @@
+import copy
+
 from Environment import Environment
-from BacktrackingSolver import BacktrackingSolver
+from BacktrackingSolver import SimpleBacktrackingSolver, ForwardCheckingBacktrackingSolver, BacktrackingAC
+from LocalSeachSolver import SimulatedAnnealing
 
 
-class Sensor:
-    @staticmethod
-    def getState(environment: Environment):
-        return environment.getBoard()
-
-
-class Actuator:
-    @staticmethod
-    def setCell(coords: tuple, environment: Environment):
-        environment.setCell(coords)
+def printBoard(board):
+    for y in board:
+        print(y)
 
 
 class Agent:
+
     def __init__(self):
-        self.sensor = Sensor()
-        self.actuator = Actuator()
         self.nextMove = []
         self.logicSteps = int
-        self.archivedEnvironments = []
         self.currentEnvironment = None
 
     #   Check if the current environment is solved
-    def isSolved(self):
-        for y in self.sensor.getState(self.currentEnvironment):
+    def isSolved(self, board: list):
+        for y in board:
             for x in y:
                 if x == 0:
                     return False
         return True
 
-    #   Method to initialize an environment, if there is a current board archive it
+    #   Method to initialize an environment
     def initializeEnvironment(self, difficultly, boardNumber):
-        if self.currentEnvironment is not None:
-            self.archivedEnvironments.append(self.currentEnvironment)
         self.currentEnvironment = Environment(difficultly, boardNumber)
 
+    #   Method to solve the current environments board with simple backtracking
+    def solveWithSimpleBacktracking(self):
+        return SimpleBacktrackingSolver().solve(copy.deepcopy(self.currentEnvironment.getBoard()), 0)
 
-class Main:
-    agent = Agent()
-    agent.initializeEnvironment("Easy", 1)
-    solver = BacktrackingSolver(Solver(agent, agent.sensor, agent.actuator))
+    #   Method to solve the current environments board with forward checking backtracking
+    def solveWithForwardCheckingBacktracking(self):
+        return ForwardCheckingBacktrackingSolver().solve(copy.deepcopy(self.currentEnvironment.getBoard()), 0)
 
-Main()
+    #   Method to solve the current environments board with a simulated annealing algorithm
+    def solveSimulatedAnnealing(self, temp, tau):
+        return SimulatedAnnealing().solve(copy.deepcopy(self.currentEnvironment.getBoard()), temp, tau)
+
+    #   Method to solve the current environments board with a simulated annealing algorithm
+    def solveArcConsistency(self):
+        board = copy.deepcopy(self.currentEnvironment.getBoard())
+        return BacktrackingAC(board).solve(board)
+
+
+if __name__ == "__main__":
+    difficulties = ["Easy", "Med", "Hard", "Evil"]
+    print("Enter desired board difficulty [\"Easy\", \"Med\",\"Hard\",\"Evil\"]:")
+    difficulty = input()
+    print("Enter board number [1-5]:")
+    boardNumber = input()
+    a = Agent()
+    runs = 1
+
+    # Compare backtracking solvers average attempts
+    for dif in difficulties:
+        for nums in range(1, 6):
+            a.initializeEnvironment(dif, nums)
+            fcAverage = 0
+            btAverage = 0
+            acAverage = 0
+            for run in range(runs):
+                fcAverage += a.solveWithForwardCheckingBacktracking()[0]
+                btAverage += a.solveWithSimpleBacktracking()[0]
+                acAverage += a.solveArcConsistency()[0]
+            print("Simple Backtracking Average Steps (Diff: " + dif + ", Num: " + str(nums) + "): " + str(btAverage / runs))
+            print("Forward Backtracking Average Steps (Diff: " + dif + ", Num: " + str(nums) + "): " + str(fcAverage / runs))
+            print("Arc Backtracking Average Steps (Diff: " + dif + ", Num: " + str(nums) + "): " + str(acAverage / runs))
+            print("+----------------+")
+    # a.initializeEnvironment(difficulty, boardNumber)
+    # print(a.solveSimulatedAnnealing(500, 60))
